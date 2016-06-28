@@ -1,6 +1,7 @@
-var Git = require('nodegit');
+var git = require('nodegit');
+var fs = require('fs');
 
-Git.Repository.open("C:\\wamp\\www\\pajamasql")
+git.Repository.open('C:\\wamp\\www\\pajamasql')
     .then(function(repo) {
         return repo.getMasterCommit();
     })
@@ -8,17 +9,19 @@ Git.Repository.open("C:\\wamp\\www\\pajamasql")
         var history = firstCommitOnMaster.history();
         var count = 0;
 
-        history.on("commit", function(commit) {
-            if (++count > 5) {
-                return;
-            }
+        history.on('commit', function(commit) {
+            ++count;
+            console.log(count);
+        });
 
-            var author = commit.author();
-
-            console.log("commit " + commit.sha());
-            console.log("Author:\t" + author.name() + " <" + author.email() + ">");
-            console.log("Date:\t" + commit.date());
-            console.log("\n    " + commit.message());
+        history.on('end', function(commits) {
+            fs.writeFile(
+                'index.html',
+                `<!doctype html>
+                    <html>
+                        <head></head>
+                        <body># commits: ${count}</body>
+                    </html>`);
         });
 
         history.start();
