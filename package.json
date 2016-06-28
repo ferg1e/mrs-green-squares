@@ -1,0 +1,16 @@
+{
+  "name": "mrs-green-squares",
+  "version": "0.0.0",
+  "description": "Clone of GitHub contribution activity visualization for your local repos. Output is currently a webpage with the entire history of each repo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "visualization",
+    "history"
+  ],
+  "author": "Ry Ferguson",
+  "license": "MIT"
+}
