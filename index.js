@@ -2,8 +2,11 @@ var git = require('nodegit');
 var fs = require('fs');
 
 //
-var commitCounts = {};+
+var commitCounts = {};
+var firstDay;
+var lastDay;
 
+//
 git.Repository.open('C:\\wamp\\www\\pajamasql')
     .then(function(repo) {
         return repo.getMasterCommit();
@@ -12,6 +15,7 @@ git.Repository.open('C:\\wamp\\www\\pajamasql')
         var history = firstCommitOnMaster.history();
         var count = 0;
 
+        //
         history.on('commit', function(commit) {
             ++count;
             var d = new Date(commit.date());
@@ -28,15 +32,25 @@ git.Repository.open('C:\\wamp\\www\\pajamasql')
                 commitCounts[iy] = 1;
             }
 
-            //console.log(commit.date());
+            //
+            if(!firstDay || (d < firstDay)) {
+                firstDay = d;
+            }
+
+            if(!lastDay || (d > lastDay)) {
+                lastDay = d;
+            }
+
             //console.log(d.getDay());
             //console.log(d.toUTCString());
-            //console.log(iy);
-            //console.log();
         });
 
+        //
         history.on('end', function(commits) {
             console.log(commitCounts);
+            console.log(firstDay);
+            console.log(lastDay);
+
             fs.writeFile(
                 'index.html',
                 `<!doctype html>
@@ -46,5 +60,6 @@ git.Repository.open('C:\\wamp\\www\\pajamasql')
                     </html>`);
         });
 
+        //
         history.start();
     });
