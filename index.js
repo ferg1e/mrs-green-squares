@@ -19,11 +19,7 @@ git.Repository.open('C:\\wamp\\www\\pajamasql')
         history.on('commit', function(commit) {
             ++count;
             var d = new Date(commit.date());
-
-            //get YYYY-MM-DD
-            var iy = d.getUTCFullYear() + '-' +
-                ('0' + (d.getUTCMonth() + 1)).slice(-2) + '-'  +
-                ('0' + d.getUTCDate()).slice(-2);
+            var iy = getYyyyMmDd(d);
 
             if(commitCounts[iy]) {
                 commitCounts[iy]++;
@@ -40,26 +36,87 @@ git.Repository.open('C:\\wamp\\www\\pajamasql')
             if(!lastDay || (d > lastDay)) {
                 lastDay = d;
             }
-
-            //console.log(d.getDay());
-            //console.log(d.toUTCString());
         });
 
         //
         history.on('end', function(commits) {
-            console.log(commitCounts);
-            console.log(firstDay);
-            console.log(lastDay);
+            var currentDayToDraw = firstDay;
+            currentDayToDraw.setDate(currentDayToDraw.getDate() - 3);
 
+            var lastDayToDraw = lastDay;
+            lastDayToDraw.setDate(lastDayToDraw.getDate() + 3);
+
+            var sqHtml = '<div class="sqs">';
+            var divOpen = false;
+
+            //
+            while(currentDayToDraw <= lastDayToDraw) {
+                if(!divOpen) {
+                    sqHtml += '<div>';
+                    divOpen = true;
+                }
+
+                var iy = getYyyyMmDd(currentDayToDraw);
+                var numCommits = commitCounts[iy] ? commitCounts[iy] : 0;
+
+                sqHtml += '<div>' + numCommits + '</div>';
+
+                if(currentDayToDraw.getUTCDay() == 6) {
+                    sqHtml += '</div>';
+                    divOpen = false;
+                }
+
+                //
+                currentDayToDraw.setDate(currentDayToDraw.getDate() + 1);
+            }
+
+            //
+            if(divOpen) {
+                sqHtml += '</div>';
+            }
+
+            sqHtml += '</div>';
+
+            //
+            var css = `<style>
+                .sqs {
+                    position: relative;
+                }
+
+                .sqs > div {
+                    display: inline-block;
+                }
+
+                .sqs > div:last-child {
+                    position: absolute;
+                    top: 0;
+                }
+
+                .sqs > div > div {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 0 3px 3px;
+                    background: #cccccc;
+                }
+                </style>`;
+
+            //
             fs.writeFile(
                 'index.html',
                 `<!doctype html>
                     <html>
-                        <head></head>
-                        <body># commits: ${count}</body>
+                        <head>${css}</head>
+                        <body># commits: ${count} ${sqHtml}</body>
                     </html>`);
         });
 
         //
         history.start();
     });
+
+//
+function getYyyyMmDd(theDate) {
+    return theDate.getUTCFullYear() + '-' +
+        ('0' + (theDate.getUTCMonth() + 1)).slice(-2) + '-'  +
+        ('0' + theDate.getUTCDate()).slice(-2);
+}
