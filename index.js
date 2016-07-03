@@ -22,9 +22,9 @@ openNextRepo();
 
 //
 function getYyyyMmDd(theDate) {
-    return theDate.getUTCFullYear() + '-' +
-        ('0' + (theDate.getUTCMonth() + 1)).slice(-2) + '-'  +
-        ('0' + theDate.getUTCDate()).slice(-2);
+    return theDate.getFullYear() + '-' +
+        ('0' + (theDate.getMonth() + 1)).slice(-2) + '-'  +
+        ('0' + theDate.getDate()).slice(-2);
 }
 
 //
@@ -126,19 +126,19 @@ function openNextRepo() {
             //
             weeksHtml += '<div class="' + cssClass + '"></div>';
 
-            if(currentDayToDraw.getUTCDay() == 6) {
+            if(currentDayToDraw.getDay() == 6) {
 
                 //
                 if(weeksDays.indexOf(1) != -1) {
                     var monthLabel = (weeksDays.length == 7)
                         ? '<label class="month">' +
-                            monthLabels[currentDayToDraw.getUTCMonth()] +
+                            monthLabels[currentDayToDraw.getMonth()] +
                             '</label>'
 
                         : '';
 
                     //
-                    var yearLabel = (currentDayToDraw.getUTCMonth() == 6)
+                    var yearLabel = (currentDayToDraw.getMonth() == 6)
                         ? '<label class="year">' + currentDayToDraw.getFullYear() + '</label>'
                         : '';
 
