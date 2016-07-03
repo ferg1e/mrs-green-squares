@@ -130,9 +130,12 @@ function openNextRepo() {
 
                 //
                 if(weeksDays.indexOf(1) != -1) {
-                    var monthLabel = '<label class="month">' +
-                        monthLabels[currentDayToDraw.getUTCMonth()] +
-                        '</label>';
+                    var monthLabel = (weeksDays.length == 7)
+                        ? '<label class="month">' +
+                            monthLabels[currentDayToDraw.getUTCMonth()] +
+                            '</label>'
+
+                        : '';
 
                     //
                     var yearLabel = (currentDayToDraw.getUTCMonth() == 6)
