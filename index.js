@@ -2,6 +2,11 @@ var git = require('nodegit');
 var fs = require('fs');
 var config = require('./my-settings');
 
+//const
+var monthLabels = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 //
 var commitCounts = {};
 var firstDay;
@@ -9,6 +14,8 @@ var lastDay;
 var repoI = -1;
 var count = 0;
 var max = 0;
+var weeksDays;
+var weeksHtml;
 
 //
 openNextRepo();
@@ -88,7 +95,14 @@ function openNextRepo() {
             if(!divOpen) {
                 sqHtml += '<div>';
                 divOpen = true;
+
+                //
+                weeksDays = [];
+                weeksHtml = '';
             }
+
+            //
+            weeksDays.push(currentDayToDraw.getDate());
 
             var iy = getYyyyMmDd(currentDayToDraw);
             var numCommits = commitCounts[iy] ? commitCounts[iy] : 0;
@@ -110,10 +124,19 @@ function openNextRepo() {
             }
 
             //
-            sqHtml += '<div class="' + cssClass + '"></div>';
+            weeksHtml += '<div class="' + cssClass + '"></div>';
 
             if(currentDayToDraw.getUTCDay() == 6) {
-                sqHtml += '</div>';
+
+                //
+                if(weeksDays.indexOf(1) != -1) {
+                    weeksHtml = '<label>' +
+                        monthLabels[currentDayToDraw.getUTCMonth()] +
+                        '</label>' +
+                        weeksHtml;
+                }
+
+                sqHtml += weeksHtml + '</div>';
                 divOpen = false;
             }
 
@@ -123,7 +146,7 @@ function openNextRepo() {
 
         //
         if(divOpen) {
-            sqHtml += '</div>';
+            sqHtml += weeksHtml + '</div>';
         }
 
         sqHtml += '</div>';
@@ -133,15 +156,25 @@ function openNextRepo() {
             .sqs {
                 position: relative;
                 white-space: nowrap;
+                margin-top: 25px;
             }
 
             .sqs > div {
                 display: inline-block;
+                position: relative;
             }
 
             .sqs > div:last-child {
                 position: absolute;
                 top: 0;
+            }
+
+            .sqs > div > label {
+                font-size: 12px;
+                color: #acacac;
+                position: absolute;
+                top: -15px;
+                margin-left: 2px;
             }
 
             .sqs > div > div {
