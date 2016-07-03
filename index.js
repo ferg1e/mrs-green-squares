@@ -155,10 +155,16 @@ function openNextRepo() {
             sqHtml += weeksHtml + '</div>';
         }
 
+        sqHtml += '<div id="bookend"></div>';
         sqHtml += '</div>';
 
         //
         var css = `<style>
+            body {
+                margin-left: 120px;
+                margin-top: 120px;
+            }
+
             .sqs {
                 position: relative;
                 white-space: nowrap;
@@ -180,7 +186,7 @@ function openNextRepo() {
                 color: #acacac;
                 position: absolute;
                 top: -15px;
-                margin-left: 2px;
+                margin-left: 1px;
             }
 
             .sqs > div > label.year {
@@ -192,9 +198,14 @@ function openNextRepo() {
             }
 
             .sqs > div > div {
-                width: 11px;
-                height: 11px;
-                margin: 0 0 2px 2px;
+                width: 10px;
+                height: 10px;
+                margin: 0 0 1px 1px;
+            }
+
+            #bookend {
+                width: 120px;
+                height: 10px;
             }
 
             .c0 {
@@ -224,7 +235,11 @@ function openNextRepo() {
             `<!doctype html>
             <html>
                 <head>${css}</head>
-                <body># commits: ${count}<br>max: ${max}${sqHtml}</body>
+                <body>
+                    # commits: ${count}<br>
+                    max: ${max}
+                    ${sqHtml}
+                </body>
             </html>`);
     }
 }
