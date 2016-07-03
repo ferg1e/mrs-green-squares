@@ -130,10 +130,16 @@ function openNextRepo() {
 
                 //
                 if(weeksDays.indexOf(1) != -1) {
-                    weeksHtml = '<label>' +
+                    var monthLabel = '<label class="month">' +
                         monthLabels[currentDayToDraw.getUTCMonth()] +
-                        '</label>' +
-                        weeksHtml;
+                        '</label>';
+
+                    //
+                    var yearLabel = (currentDayToDraw.getUTCMonth() == 6)
+                        ? '<label class="year">' + currentDayToDraw.getFullYear() + '</label>'
+                        : '';
+
+                    weeksHtml = yearLabel + monthLabel + weeksHtml;
                 }
 
                 sqHtml += weeksHtml + '</div>';
@@ -156,7 +162,7 @@ function openNextRepo() {
             .sqs {
                 position: relative;
                 white-space: nowrap;
-                margin-top: 25px;
+                margin-top: 52px;
             }
 
             .sqs > div {
@@ -169,12 +175,20 @@ function openNextRepo() {
                 top: 0;
             }
 
-            .sqs > div > label {
+            .sqs > div > label.month {
                 font-size: 12px;
                 color: #acacac;
                 position: absolute;
                 top: -15px;
                 margin-left: 2px;
+            }
+
+            .sqs > div > label.year {
+                font-size: 16px;
+                color: #777777;
+                position: absolute;
+                top: -42px;
+                left: -50%;
             }
 
             .sqs > div > div {
