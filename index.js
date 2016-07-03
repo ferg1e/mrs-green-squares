@@ -158,7 +158,7 @@ function openNextRepo() {
             sqHtml += weeksHtml + '</div>';
         }
 
-        sqHtml += '<div id="bookend"></div>';
+        sqHtml += '<span id="bookend"></span>';
         sqHtml += '</div>';
 
         //
@@ -179,7 +179,7 @@ function openNextRepo() {
                 position: relative;
             }
 
-            .sqs > div:last-child {
+            .sqs > div:last-of-type {
                 position: absolute;
                 top: 0;
             }
@@ -207,6 +207,7 @@ function openNextRepo() {
             }
 
             #bookend {
+                display: inline-block;
                 width: 120px;
                 height: 10px;
             }
