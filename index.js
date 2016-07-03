@@ -8,6 +8,7 @@ var firstDay;
 var lastDay;
 var repoI = -1;
 var count = 0;
+var max = 0;
 
 //
 openNextRepo();
@@ -44,6 +45,11 @@ function openNextRepo() {
                     }
                     else {
                         commitCounts[iy] = 1;
+                    }
+
+                    //
+                    if(commitCounts[iy] > max) {
+                        max = commitCounts[iy];
                     }
 
                     //
@@ -86,8 +92,25 @@ function openNextRepo() {
 
             var iy = getYyyyMmDd(currentDayToDraw);
             var numCommits = commitCounts[iy] ? commitCounts[iy] : 0;
+            var percent = numCommits/max;
+            var cssClass = 'c0';
 
-            sqHtml += '<div>' + numCommits + '</div>';
+            //
+            if(percent > 0 && percent <= .25) {
+                cssClass = 'c1';
+            }
+            else if(percent > .25 && percent <= .5) {
+                cssClass = 'c2';
+            }
+            else if(percent > .5 && percent <= .75) {
+                cssClass = 'c3';
+            }
+            else if(percent > .75 && percent <= 1) {
+                cssClass = 'c4';
+            }
+
+            //
+            sqHtml += '<div class="' + cssClass + '"></div>';
 
             if(currentDayToDraw.getUTCDay() == 6) {
                 sqHtml += '</div>';
@@ -122,10 +145,29 @@ function openNextRepo() {
             }
 
             .sqs > div > div {
-                width: 18px;
-                height: 18px;
+                width: 11px;
+                height: 11px;
                 margin: 0 0 2px 2px;
-                background: #cccccc;
+            }
+
+            .c0 {
+                background: #EEEEEE;
+            }
+
+            .c1 {
+                background: #D6E685;
+            }
+
+            .c2 {
+                background: #8CC665;
+            }
+
+            .c3 {
+                background: #44A340;
+            }
+
+            .c4 {
+                background: #1E6823;
             }
             </style>`;
 
@@ -135,7 +177,7 @@ function openNextRepo() {
             `<!doctype html>
             <html>
                 <head>${css}</head>
-                <body># commits: ${count} ${sqHtml}</body>
+                <body># commits: ${count}<br>max: ${max}${sqHtml}</body>
             </html>`);
     }
 }
