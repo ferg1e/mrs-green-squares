@@ -43,29 +43,35 @@ function openNextRepo() {
 
                 //
                 history.on('commit', function(commit) {
-                    ++count;
-                    var d = new Date(commit.date());
-                    var iy = getYyyyMmDd(d);
+                    var author = commit.author();
+                    var isCountCommit = !config.authors ||
+                        config.authors.indexOf(author.email()) != -1;
 
-                    if(commitCounts[iy]) {
-                        commitCounts[iy]++;
-                    }
-                    else {
-                        commitCounts[iy] = 1;
-                    }
+                    if(isCountCommit) {
+                        ++count;
+                        var d = new Date(commit.date());
+                        var iy = getYyyyMmDd(d);
 
-                    //
-                    if(commitCounts[iy] > max) {
-                        max = commitCounts[iy];
-                    }
+                        if(commitCounts[iy]) {
+                            commitCounts[iy]++;
+                        }
+                        else {
+                            commitCounts[iy] = 1;
+                        }
 
-                    //
-                    if(!firstDay || (d < firstDay)) {
-                        firstDay = d;
-                    }
+                        //
+                        if(commitCounts[iy] > max) {
+                            max = commitCounts[iy];
+                        }
 
-                    if(!lastDay || (d > lastDay)) {
-                        lastDay = d;
+                        //
+                        if(!firstDay || (d < firstDay)) {
+                            firstDay = d;
+                        }
+
+                        if(!lastDay || (d > lastDay)) {
+                            lastDay = d;
+                        }
                     }
                 });
 
