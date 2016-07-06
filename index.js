@@ -135,7 +135,7 @@ function openNextRepo() {
             if(currentDayToDraw.getDay() == 6) {
 
                 //
-                if(weeksDays.indexOf(1) != -1) {
+                if(weeksDays.indexOf(8) != -1) {
                     var monthLabel = (weeksDays.length == 7)
                         ? '<label class="month">' +
                             monthLabels[currentDayToDraw.getMonth()] +
