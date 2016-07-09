@@ -171,7 +171,7 @@ function openNextRepo() {
         var css = `<style>
             body {
                 margin-left: 120px;
-                margin-top: 120px;
+                margin-top: 240px;
             }
 
             .sqs {
@@ -246,8 +246,6 @@ function openNextRepo() {
             <html>
                 <head>${css}</head>
                 <body>
-                    # commits: ${count}<br>
-                    max: ${max}
                     ${sqHtml}
                 </body>
             </html>`);
