@@ -16,7 +16,7 @@ There are basically 3 things you need to do:
 - Fill in the `repos` and `authors` arrays in the `my-settings.json` file.
 `authors` defaults to all authors.
 - Run it by typing `node index.js`.
-You should now see index.html in your folder.
+You should now see `index.html` in your folder.
 
 ## LICENSE
 
