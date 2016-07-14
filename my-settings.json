@@ -1,7 +1,14 @@
 {
     "repos": [
-        "C:/wamp/www/corn-wand",
-        "C:/wamp/www/screen-name"
+        {
+            "dir": "C:/wamp/www/corn-wand",
+            "colors": ["eeeeee", "85B9E6", "657EC6", "4256BA", "212375"]
+        },
+        {
+            "dir": "C:/wamp/www/screen-name",
+            "colors": ["eeeeee", "E69585", "C6656E", "CB292C", "7A1517"]
+        },
+        "C:/wamp/www/this-site"
     ],
 
     "authors": [

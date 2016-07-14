@@ -16,6 +16,7 @@ var count = 0;
 var max = 0;
 var weeksDays;
 var weeksHtml;
+var allColors = [];
 
 //
 openNextRepo();
@@ -32,8 +33,28 @@ function openNextRepo() {
     ++repoI;
 
     if(repoI < config.repos.length) {
-        var repoPath = config.repos[repoI];
+        var repoPath = config.repos[repoI].dir
+            ? config.repos[repoI].dir
+            : config.repos[repoI];
 
+        var colors = config.repos[repoI].colors
+            ? config.repos[repoI].colors
+            : ['eeeeee', 'D6E685', '8CC665', '44A340', '1E6823'];
+
+        colors = colors.join();
+
+        //
+        var colorI = allColors.indexOf(colors);
+
+        if(colorI == -1) {
+            allColors.push(colors);
+            colorI = allColors.indexOf(colors);
+        }
+
+        //
+        var colorIndexStr = colorI.toString();
+
+        //
         git.Repository.open(repoPath)
             .then(function(repo) {
                 return repo.getMasterCommit();
@@ -52,16 +73,24 @@ function openNextRepo() {
                         var d = new Date(commit.date());
                         var iy = getYyyyMmDd(d);
 
-                        if(commitCounts[iy]) {
-                            commitCounts[iy]++;
+                        if(!commitCounts[iy]) {
+                            commitCounts[iy] = {};
+                            commitCounts[iy]['total'] = 1;
                         }
                         else {
-                            commitCounts[iy] = 1;
+                            ++commitCounts[iy]['total'];
+                        }
+
+                        if(!commitCounts[iy][colorIndexStr]) {
+                            commitCounts[iy][colorIndexStr] = 1;
+                        }
+                        else {
+                            ++commitCounts[iy][colorIndexStr];
                         }
 
                         //
-                        if(commitCounts[iy] > max) {
-                            max = commitCounts[iy];
+                        if(commitCounts[iy]['total'] > max) {
+                            max = commitCounts[iy]['total'];
                         }
 
                         //
@@ -111,22 +140,58 @@ function openNextRepo() {
             weeksDays.push(currentDayToDraw.getDate());
 
             var iy = getYyyyMmDd(currentDayToDraw);
-            var numCommits = commitCounts[iy] ? commitCounts[iy] : 0;
+            var numCommits = commitCounts[iy]
+                ? commitCounts[iy]['total']
+                : 0;
+
             var percent = numCommits/max;
-            var cssClass = 'c0';
+            var colorMax = 0;
+            var colorI = 0;
+
+            if(commitCounts[iy]) {
+
+                //get the biggest color count
+                for(var i in commitCounts[iy]) {
+                    if(i != 'total') {
+                        if(commitCounts[iy][i] > colorMax) {
+                            colorMax = commitCounts[iy][i];
+                        }
+                    }
+                }
+
+                //select the color with the max count
+                //that has the lowest id
+                colorI = 999999;
+
+                for(var i in commitCounts[iy]) {
+                    if(i != 'total') {
+                        var intI = parseInt(i);
+
+                        if(commitCounts[iy][i] == colorMax && intI < colorI) {
+                            colorI = intI;
+                        }
+                    }
+                }
+            }
 
             //
+            var cssClass = 'c' + colorI.toString();
+
+            //
+            if(percent <= 0) {
+                cssClass += '-0';
+            }
             if(percent > 0 && percent <= .25) {
-                cssClass = 'c1';
+                cssClass += '-1';
             }
             else if(percent > .25 && percent <= .5) {
-                cssClass = 'c2';
+                cssClass += '-2';
             }
             else if(percent > .5 && percent <= .75) {
-                cssClass = 'c3';
+                cssClass += '-3';
             }
-            else if(percent > .75 && percent <= 1) {
-                cssClass = 'c4';
+            else if(percent > .75) {
+                cssClass += '-4';
             }
 
             //
@@ -216,28 +281,23 @@ function openNextRepo() {
                 display: inline-block;
                 width: 120px;
                 height: 10px;
-            }
+            } `;
 
-            .c0 {
-                background: #EEEEEE;
-            }
+        //
+        for(var i in allColors) {
+            var jColors = allColors[i];
+            var sColors = jColors.split(',');
 
-            .c1 {
-                background: #D6E685;
+            for(var j in sColors) {
+                css += '.c' + i + '-' + j +
+                    ' { background: #' +
+                    sColors[j] +
+                    ';} ';
             }
+        }
 
-            .c2 {
-                background: #8CC665;
-            }
-
-            .c3 {
-                background: #44A340;
-            }
-
-            .c4 {
-                background: #1E6823;
-            }
-            </style>`;
+        //
+        css += '</style>';
 
         //
         fs.writeFile(
