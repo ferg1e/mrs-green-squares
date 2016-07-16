@@ -288,11 +288,31 @@ function openNextRepo() {
             var jColors = allColors[i];
             var sColors = jColors.split(',');
 
-            for(var j in sColors) {
-                css += '.c' + i + '-' + j +
-                    ' { background: #' +
-                    sColors[j] +
-                    ';} ';
+            if(sColors.length == 5) {
+                for(var j in sColors) {
+                    css += '.c' + i + '-' + j +
+                        ' { background: #' +
+                        sColors[j] +
+                        ';} ';
+                }
+            }
+            else {
+                //['eeeeee', 'D6E685', '8CC665', '44A340', '1E6823']
+                var controlColor = (sColors.length > 0)
+                    ? sColors[0]
+                    : '1E6823';
+
+                for(var j = 0; j < 5; ++j) {
+
+                    var attrs = (j == 0)
+                        ? 'background: #eeeeee;'
+                        : 'background: #' + controlColor + '; opacity: ' + (.12 + .22*j) + ';';
+
+                    css += '.c' + i + '-' + j +
+                        ' { ' +
+                        attrs +
+                        ' } ';
+                }
             }
         }
 
