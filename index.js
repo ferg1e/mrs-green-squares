@@ -1,4 +1,4 @@
-var git = require('nodegit');
+var simpleGit = require('simple-git');
 var fs = require('fs');
 var config = require('./my-settings');
 
@@ -29,7 +29,7 @@ function getYyyyMmDd(theDate) {
 }
 
 //
-function openNextRepo() {
+async function openNextRepo() {
     ++repoI;
 
     if(repoI < config.repos.length) {
@@ -55,63 +55,55 @@ function openNextRepo() {
         var colorIndexStr = colorI.toString();
 
         //
-        git.Repository.open(repoPath)
-            .then(function(repo) {
-                return repo.getMasterCommit();
-            })
-            .then(function(firstCommitOnMaster) {
-                var history = firstCommitOnMaster.history();
+        const repo = simpleGit({
+            baseDir: repoPath,
+            binary: 'git',
+        })
+
+        const commits = await repo.log()
+
+        commits.all.forEach(e => {
+            var authorEmail = e.author_email;
+            var isCountCommit = !config.authors ||
+                config.authors.indexOf(authorEmail) != -1;
+
+            if(isCountCommit) {
+                ++count;
+                var d = new Date(e.date);
+                var iy = getYyyyMmDd(d);
+
+                if(!commitCounts[iy]) {
+                    commitCounts[iy] = {};
+                    commitCounts[iy]['total'] = 1;
+                }
+                else {
+                    ++commitCounts[iy]['total'];
+                }
+
+                if(!commitCounts[iy][colorIndexStr]) {
+                    commitCounts[iy][colorIndexStr] = 1;
+                }
+                else {
+                    ++commitCounts[iy][colorIndexStr];
+                }
 
                 //
-                history.on('commit', function(commit) {
-                    var author = commit.author();
-                    var isCountCommit = !config.authors ||
-                        config.authors.indexOf(author.email()) != -1;
-
-                    if(isCountCommit) {
-                        ++count;
-                        var d = new Date(commit.date());
-                        var iy = getYyyyMmDd(d);
-
-                        if(!commitCounts[iy]) {
-                            commitCounts[iy] = {};
-                            commitCounts[iy]['total'] = 1;
-                        }
-                        else {
-                            ++commitCounts[iy]['total'];
-                        }
-
-                        if(!commitCounts[iy][colorIndexStr]) {
-                            commitCounts[iy][colorIndexStr] = 1;
-                        }
-                        else {
-                            ++commitCounts[iy][colorIndexStr];
-                        }
-
-                        //
-                        if(commitCounts[iy]['total'] > max) {
-                            max = commitCounts[iy]['total'];
-                        }
-
-                        //
-                        if(!firstDay || (d < firstDay)) {
-                            firstDay = d;
-                        }
-
-                        if(!lastDay || (d > lastDay)) {
-                            lastDay = d;
-                        }
-                    }
-                });
+                if(commitCounts[iy]['total'] > max) {
+                    max = commitCounts[iy]['total'];
+                }
 
                 //
-                history.on('end', function(commits) {
-                    openNextRepo();
-                });
+                if(!firstDay || (d < firstDay)) {
+                    firstDay = d;
+                }
 
-                //
-                history.start();
-            });
+                if(!lastDay || (d > lastDay)) {
+                    lastDay = d;
+                }
+            }
+        })
+
+        openNextRepo()
     }
 
     //all repos done
@@ -328,6 +320,7 @@ function openNextRepo() {
                 <body>
                     ${sqHtml}
                 </body>
-            </html>`);
+            </html>`,
+            err => {});
     }
 }
