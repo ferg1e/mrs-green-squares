@@ -12,5 +12,8 @@
     "history"
   ],
   "author": "Ry Ferguson",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "simple-git": "^3.26.0"
+  }
 }
