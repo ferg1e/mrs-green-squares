@@ -1,23 +1,16 @@
 {
     "repos": [
         {
-            "dir": "C:/xampp/htdocs/dovetail",
+            "dir": "C:/path/to/my/repo",
             "colors": ["ff0000"]
-        }
-    ],
-
-    "repos2": [
-        {
-            "dir": "C:/xampp/htdocs/corn-wand",
-            "colors": ["eeeeee", "E6E085", "C6BE65", "A39F40", "68651E"]
         },
         {
-            "dir": "C:/Users/Ry/my-node/comment-castles",
-            "colors": ["eeeeee", "E6E085", "C6BE65", "A39F40", "68651E"]
+            "dir": "C:/path/to/other/repo",
+            "colors": ["0000ff"]
         }
     ],
 
     "authors": [
-        "rytf12@gmail.com"
+        "mycommitemail@alice.net"
     ]
 }
