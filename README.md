@@ -12,7 +12,3 @@ Follow these steps to generate a commit visualization:
 - Run `npm install`.
 - Edit `src/config.json` and point to the directories that contain your Git repos. Fill in your email address for `authors` in the same config file.
 - Run `node src/index.js`.
-
-## LICENSE
-
-MIT <http://ryf.mit-license.org/>
