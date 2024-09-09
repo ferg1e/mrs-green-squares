@@ -48,7 +48,8 @@ exports.getData = async (configData) => {
                 configData.authors.indexOf(authorEmail) != -1
 
             if(isCountCommit) {
-                const d = new Date(e.date)
+                const gitCommitDate = e.date.substr(0, 10)
+                const d = new Date(gitCommitDate)
                 const iy = getYyyyMmDd(d)
 
                 if(!commitCounts[iy]) {
