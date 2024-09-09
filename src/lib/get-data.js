@@ -85,11 +85,17 @@ exports.getData = async (configData) => {
     }
 
     //
+    const outputPath = !configData.output_path
+        ? 'index.html'
+        : configData.output_path
+
+    //
     return {
         commitCounts,
         allColors,
         max,
         firstDay,
         lastDay,
+        outputPath,
     }
 }

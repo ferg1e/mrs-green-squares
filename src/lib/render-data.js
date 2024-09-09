@@ -212,7 +212,7 @@ exports.renderData = (data) => {
 
     //
     fs.writeFile(
-        'index.html',
+        data.outputPath,
         `<!doctype html>
         <html>
             <head>${css}</head>

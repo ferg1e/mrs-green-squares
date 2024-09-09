@@ -12,5 +12,7 @@
 
     "authors": [
         "mycommitemail@alice.net"
-    ]
+    ],
+
+    "output_path": "index.html"
 }

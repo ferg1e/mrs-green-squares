@@ -19,7 +19,8 @@ const data = {
   allColors: [ 'ff0000', '00aa00' ],
   max: 10,
   firstDay: new Date('2014-04-20'),
-  lastDay: new Date('2014-04-26')
+  lastDay: new Date('2014-04-26'),
+  outputPath: 'test-render.html',
 }
 
 //
