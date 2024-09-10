@@ -166,7 +166,8 @@ exports.renderData = (data) => {
         .sqs > div > div {
             width: 10px;
             height: 10px;
-            margin: 0 0 1px 1px;
+            border-radius: 2px;
+            margin: 0 0 3px 3px;
         }
 
         #bookend {
