@@ -14,6 +14,7 @@ exports.renderData = (data) => {
     let divOpen = false
     let divOpenYear = false
     let weeksDays, weeksHtml
+    let isFirstYear = true
 
     //
     while(currentDayToDraw <= lastDayToDraw) {
@@ -99,7 +100,7 @@ exports.renderData = (data) => {
 
             //
             if(weeksDays.indexOf(8) != -1) {
-                const monthLabel = (weeksDays.length == 7)
+                const monthLabel = (weeksDays.length == 7 && isFirstYear)
                     ? '<label class="lmonth">' +
                         monthLabels[currentDayToDraw.getMonth()] +
                         '</label>'
@@ -129,6 +130,7 @@ exports.renderData = (data) => {
 
             sqHtml += '</div>'
             divOpenYear = false
+            isFirstYear = false
         }
 
         //
