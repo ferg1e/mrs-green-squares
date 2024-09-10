@@ -168,15 +168,15 @@ exports.renderData = (data) => {
 
         .lmonth {
             font-size: 12px;
-            color: #acacac;
+            color: #333333;
             position: absolute;
-            top: -15px;
+            top: -18px;
             margin-left: 1px;
         }
 
         .lyear {
             font-size: 16px;
-            color: #777777;
+            color: #333333;
             position: absolute;
             top: 40%;
             right: -68px;
