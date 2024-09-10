@@ -21,7 +21,11 @@ exports.renderData = (data) => {
 
         //
         if(!divOpenYear) {
-            sqHtml += '<div class="year">'
+            sqHtml += '<div class="year">' +
+                '<label class="lyear">' +
+                currentDayToDraw.getFullYear() +
+                '</label>'
+
             divOpenYear = true
         }
 
@@ -107,12 +111,7 @@ exports.renderData = (data) => {
 
                     : ''
 
-                //
-                const yearLabel = (currentDayToDraw.getMonth() == 6)
-                    ? '<label class="lyear">' + currentDayToDraw.getFullYear() + '</label>'
-                    : ''
-
-                weeksHtml = yearLabel + monthLabel + weeksHtml
+                weeksHtml = monthLabel + weeksHtml
             }
 
             sqHtml += weeksHtml + '</div>'
@@ -179,20 +178,21 @@ exports.renderData = (data) => {
             font-size: 16px;
             color: #777777;
             position: absolute;
-            top: -42px;
-            left: -50%;
+            top: 40%;
+            right: -68px;
         }
 
         .day {
             width: 10px;
             height: 10px;
             border-radius: 2px;
-            margin: 0 0 3px 3px;
+            margin: 0 3px 3px 0;
         }
 
         .year {
-            margin-top: 40px;
+            margin-bottom: 1em;
             position: relative;
+            width: 689px;
         }
 
         #bookend {
