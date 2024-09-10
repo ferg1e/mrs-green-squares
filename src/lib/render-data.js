@@ -149,15 +149,10 @@ exports.renderData = (data) => {
 
     //
     let css = `<style>
-        body {
-            margin-left: 120px;
-            margin-top: 240px;
-        }
-
         .sqs {
             position: relative;
             white-space: nowrap;
-            margin-top: 52px;
+            margin: 120px 0 0 240px;
         }
 
         .week {
