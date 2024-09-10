@@ -7,20 +7,26 @@ const monthLabels = [
 exports.renderData = (data) => {
 
     //
-    const currentDayToDraw = data.firstDay
-    currentDayToDraw.setDate(currentDayToDraw.getDate() - 3)
-
-    const lastDayToDraw = data.lastDay
-    lastDayToDraw.setDate(lastDayToDraw.getDate() + 3)
+    const currentDayToDraw = new Date(data.firstDay.getFullYear() + '-01-01')
+    const lastDayToDraw = new Date(data.lastDay.getFullYear() + '-12-31')
 
     let sqHtml = '<div class="sqs">'
     let divOpen = false
+    let divOpenYear = false
     let weeksDays, weeksHtml
 
     //
     while(currentDayToDraw <= lastDayToDraw) {
+
+        //
+        if(!divOpenYear) {
+            sqHtml += '<div class="year">'
+            divOpenYear = true
+        }
+
+        //
         if(!divOpen) {
-            sqHtml += '<div>'
+            sqHtml += '<div class="week">'
             divOpen = true
 
             //
@@ -87,14 +93,14 @@ exports.renderData = (data) => {
         }
 
         //
-        weeksHtml += '<div class="' + cssClass + '"></div>'
+        weeksHtml += '<div title="' + iy + '" class="day ' + cssClass + '"></div>'
 
         if(currentDayToDraw.getDay() == 6) {
 
             //
             if(weeksDays.indexOf(8) != -1) {
                 const monthLabel = (weeksDays.length == 7)
-                    ? '<label class="month">' +
+                    ? '<label class="lmonth">' +
                         monthLabels[currentDayToDraw.getMonth()] +
                         '</label>'
 
@@ -102,7 +108,7 @@ exports.renderData = (data) => {
 
                 //
                 const yearLabel = (currentDayToDraw.getMonth() == 6)
-                    ? '<label class="year">' + currentDayToDraw.getFullYear() + '</label>'
+                    ? '<label class="lyear">' + currentDayToDraw.getFullYear() + '</label>'
                     : ''
 
                 weeksHtml = yearLabel + monthLabel + weeksHtml
@@ -110,6 +116,19 @@ exports.renderData = (data) => {
 
             sqHtml += weeksHtml + '</div>'
             divOpen = false
+        }
+
+        //
+        const isDec31 = currentDayToDraw.getMonth() == 11 && currentDayToDraw.getDate() == 31
+
+        if(isDec31) {
+            if(divOpen) {
+                sqHtml += weeksHtml + '</div>'
+                divOpen = false
+            }
+
+            sqHtml += '</div>'
+            divOpenYear = false
         }
 
         //
@@ -121,7 +140,11 @@ exports.renderData = (data) => {
         sqHtml += weeksHtml + '</div>'
     }
 
-    sqHtml += '<span id="bookend"></span>'
+    if(divOpenYear) {
+        sqHtml += '</div>'
+    }
+
+    //sqHtml += '<span id="bookend"></span>'
     sqHtml += '</div>'
 
     //
@@ -137,17 +160,17 @@ exports.renderData = (data) => {
             margin-top: 52px;
         }
 
-        .sqs > div {
+        .week {
             display: inline-block;
             position: relative;
         }
 
-        .sqs > div:last-of-type {
+        .sqs > div > div:last-of-type {
             position: absolute;
             top: 0;
         }
 
-        .sqs > div > label.month {
+        .lmonth {
             font-size: 12px;
             color: #acacac;
             position: absolute;
@@ -155,7 +178,7 @@ exports.renderData = (data) => {
             margin-left: 1px;
         }
 
-        .sqs > div > label.year {
+        .lyear {
             font-size: 16px;
             color: #777777;
             position: absolute;
@@ -163,11 +186,16 @@ exports.renderData = (data) => {
             left: -50%;
         }
 
-        .sqs > div > div {
+        .day {
             width: 10px;
             height: 10px;
             border-radius: 2px;
             margin: 0 0 3px 3px;
+        }
+
+        .year {
+            margin-top: 40px;
+            position: relative;
         }
 
         #bookend {
