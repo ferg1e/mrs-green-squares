@@ -19,7 +19,7 @@ exports.getData = async (configData) => {
             ? r.dir
             : r
 
-        let colors = r.colors
+        const colors = r.colors
             ? r.colors
             : ['eeeeee', 'D6E685', '8CC665', '44A340', '1E6823']
 
