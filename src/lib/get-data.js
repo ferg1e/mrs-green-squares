@@ -23,13 +23,13 @@ exports.getData = async (configData) => {
             ? r.colors
             : ['eeeeee', 'D6E685', '8CC665', '44A340', '1E6823']
 
-        colors = colors.join()
+        const jColors = colors.join()
 
-        let colorI = allColors.indexOf(colors)
+        let colorI = allColors.indexOf(jColors)
 
         if(colorI == -1) {
-            allColors.push(colors)
-            colorI = allColors.indexOf(colors)
+            allColors.push(jColors)
+            colorI = allColors.indexOf(jColors)
         }
 
         const colorIndexStr = colorI.toString()
