@@ -21,6 +21,16 @@ const data = {
   firstDay: new Date('2014-04-20'),
   lastDay: new Date('2015-04-26'),
   outputPath: 'test-render.html',
+  projects: [
+    {
+        title: "Repo 1",
+        colors: ['ff0000']
+    },
+    {
+        title: "Repo 2",
+        colors: ['00aa00']
+    }
+  ],
 }
 
 //
