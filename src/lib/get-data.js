@@ -6,6 +6,7 @@ exports.getData = async (configData) => {
     //
     const commitCounts = {}
     const allColors = []
+    const projects = []
     let max = 0
     let firstDay, lastDay
 
@@ -82,6 +83,14 @@ exports.getData = async (configData) => {
                 }
             }
         })
+
+        //
+        if(r.title) {
+            projects.push({
+                title: r.title,
+                colors,
+            })
+        }
     }
 
     //
@@ -97,5 +106,6 @@ exports.getData = async (configData) => {
         firstDay,
         lastDay,
         outputPath,
+        projects,
     }
 }

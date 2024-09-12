@@ -1,10 +1,12 @@
 {
     "repos": [
         {
+            "title": "My Repo",
             "dir": "C:/path/to/my/repo",
             "colors": ["ff0000"]
         },
         {
+            "title": "My Other Repo",
             "dir": "C:/path/to/other/repo",
             "colors": ["0000ff"]
         }

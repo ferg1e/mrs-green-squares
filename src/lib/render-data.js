@@ -153,7 +153,7 @@ exports.renderData = (data) => {
         .sqs {
             position: relative;
             white-space: nowrap;
-            margin: 120px 0 0 240px;
+            margin: 60px 0 0 330px;
         }
 
         .week {
@@ -189,10 +189,28 @@ exports.renderData = (data) => {
             margin: 0 3px 3px 0;
         }
 
+        .pday {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
+            border-radius: 2px;
+            margin-right: 3px;
+        }
+
         .year {
             margin-bottom: 1em;
             position: relative;
             width: 689px;
+        }
+
+        #projects {
+            position: fixed;
+            top: 50px;
+            left: 10px;
+            border: 2px solid gray;
+            border-radius: 4px;
+            padding: 5px;
+            width: 300px;
         }
 
         #bookend {
@@ -237,6 +255,35 @@ exports.renderData = (data) => {
     css += '</style>'
 
     //
+    let projectsHtml = ''
+
+    if(data.projects.length > 0) {
+        projectsHtml += '<div id="projects">'
+
+        for(let i = 0; i < data.projects.length; ++i) {
+            const p = data.projects[i]
+            let colorsHtml = ''
+
+            if(p.colors.length === 5) {
+                for(let j = 4; j >= 1; --j) {
+                    colorsHtml += `<span class="pday" style="background:#${p.colors[j]}"></span>`
+                }
+            }
+            else {
+                for(let j = 4; j >= 1; --j) {
+                    const attrs = 'background: #' + p.colors[0] + '; opacity: ' + (.12 + .22*j) + ';'
+
+                    colorsHtml += `<span class="pday" style="${attrs}"></span>`
+                }
+            }
+
+            projectsHtml += `<div>${colorsHtml}${p.title}</div>`
+        }
+
+        projectsHtml += '</div>'
+    }
+
+    //
     fs.writeFile(
         data.outputPath,
         `<!doctype html>
@@ -244,6 +291,7 @@ exports.renderData = (data) => {
             <head>${css}</head>
             <body>
                 ${sqHtml}
+                ${projectsHtml}
             </body>
         </html>`,
         err => {})
