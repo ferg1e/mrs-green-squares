@@ -225,6 +225,25 @@ exports.renderData = (data) => {
             margin-top: 1em;
         }
 
+        #commits > div {
+            color: #999999;
+            padding: 2em;
+        }
+
+        #commits > ul {
+            margin: 0;
+            padding: .5em;
+            list-style-type: none;
+        }
+
+        #commits > ul > li {
+            margin-bottom: .75em;
+        }
+
+        #commits > ul > li:last-child {
+            margin-bottom: 0;
+        }
+
         #projects {
             border: 2px solid gray;
             border-radius: 4px;
@@ -301,7 +320,7 @@ exports.renderData = (data) => {
         infoHtml += '</div>'
     }
 
-    infoHtml += '<div id="commits"><span>Click a day square to show commit messages here.</span></div>'
+    infoHtml += '<div id="commits"><div>Click a square to show commit messages.</div></div>'
 
     infoHtml += '</div>'
 
@@ -327,10 +346,10 @@ exports.renderData = (data) => {
                 commits.appendChild(ul)
             }
             else {
-                const span = document.createElement('span')
-                const spanText = document.createTextNode('There are no commit messages for that day.')
-                span.appendChild(spanText)
-                commits.appendChild(span)
+                const div = document.createElement('div')
+                const divText = document.createTextNode('No commits for that day.')
+                div.appendChild(divText)
+                commits.appendChild(div)
             }
         }
     </script>`
