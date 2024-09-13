@@ -106,7 +106,11 @@ exports.renderData = (data) => {
                 "']"
 
             : '[]'
-        weeksHtml += '<div onmouseup="mouseUp(' + arrayAsString + ')" title="' + iy + '" class="day ' + cssClass + '"></div>'
+
+        weeksHtml += '<div onmouseup="mouseUp(' +
+            arrayAsString + ', \'' + iy +
+            '\')" title="' + iy + '" class="day ' +
+            cssClass + '"></div>'
 
         if(currentDayToDraw.getDay() == 6) {
 
@@ -326,7 +330,7 @@ exports.renderData = (data) => {
 
     //
     const js = `<script>
-        function mouseUp(messages) {
+        function mouseUp(messages, dayDate) {
             const commits = document.getElementById('commits')
 
             if(commits.children.length > 0) {
@@ -347,7 +351,7 @@ exports.renderData = (data) => {
             }
             else {
                 const div = document.createElement('div')
-                const divText = document.createTextNode('No commits for that day.')
+                const divText = document.createTextNode('No commits on ' + dayDate + '.')
                 div.appendChild(divText)
                 commits.appendChild(div)
             }
