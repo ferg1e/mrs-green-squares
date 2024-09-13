@@ -107,9 +107,16 @@ exports.renderData = (data) => {
 
             : '[]'
 
+        const totalCommits = data.commitCounts[iy] ? data.commitCounts[iy].total : 0
+        const commitPhrase = totalCommits === 1
+            ? '1 commit'
+            : `${totalCommits} commits`
+
+        const titleAttrValue = `${commitPhrase} on ${iy}`
+
         weeksHtml += '<div onmouseup="mouseUp(' +
             arrayAsString + ', \'' + iy +
-            '\')" title="' + iy + '" class="day ' +
+            '\')" title="' + titleAttrValue + '" class="day ' +
             cssClass + '"></div>'
 
         if(currentDayToDraw.getDay() == 6) {
@@ -199,6 +206,7 @@ exports.renderData = (data) => {
             height: 10px;
             border-radius: 2px;
             margin: 0 3px 3px 0;
+            cursor: pointer;
         }
 
         .pday {
