@@ -98,7 +98,15 @@ exports.renderData = (data) => {
         }
 
         //
-        weeksHtml += '<div title="' + iy + '" class="day ' + cssClass + '"></div>'
+        const arrayAsString = data.commitCounts[iy]
+            ? "['" +
+                data.commitCounts[iy].messages
+                    .map(e => e.replaceAll("'", "\\'"))
+                    .join("','") +
+                "']"
+
+            : '[]'
+        weeksHtml += '<div onmouseup="mouseUp(' + arrayAsString + ')" title="' + iy + '" class="day ' + cssClass + '"></div>'
 
         if(currentDayToDraw.getDay() == 6) {
 
@@ -203,14 +211,24 @@ exports.renderData = (data) => {
             width: 689px;
         }
 
-        #projects {
+        #info {
             position: fixed;
             top: 50px;
             left: 10px;
+            width: 300px;
+        }
+
+        #commits {
             border: 2px solid gray;
             border-radius: 4px;
             padding: 5px;
-            width: 300px;
+            margin-top: 1em;
+        }
+
+        #projects {
+            border: 2px solid gray;
+            border-radius: 4px;
+            padding: 5px;
         }
 
         #bookend {
@@ -255,10 +273,10 @@ exports.renderData = (data) => {
     css += '</style>'
 
     //
-    let projectsHtml = ''
+    let infoHtml = '<div id="info">'
 
     if(data.projects.length > 0) {
-        projectsHtml += '<div id="projects">'
+        infoHtml += '<div id="projects">'
 
         for(let i = 0; i < data.projects.length; ++i) {
             const p = data.projects[i]
@@ -277,21 +295,58 @@ exports.renderData = (data) => {
                 }
             }
 
-            projectsHtml += `<div>${colorsHtml}${p.title}</div>`
+            infoHtml += `<div>${colorsHtml}${p.title}</div>`
         }
 
-        projectsHtml += '</div>'
+        infoHtml += '</div>'
     }
+
+    infoHtml += '<div id="commits"><span>Click a day square to show commit messages here.</span></div>'
+
+    infoHtml += '</div>'
+
+    //
+    const js = `<script>
+        function mouseUp(messages) {
+            const commits = document.getElementById('commits')
+
+            if(commits.children.length > 0) {
+                commits.removeChild(commits.children[0])
+            }
+
+            if(messages.length > 0) {
+                const ul = document.createElement('ul')
+
+                for(let i = 0; i < messages.length; ++i) {
+                    const li = document.createElement('li')
+                    const liText = document.createTextNode(messages[i])
+                    li.appendChild(liText)
+                    ul.appendChild(li)
+                }
+
+                commits.appendChild(ul)
+            }
+            else {
+                const span = document.createElement('span')
+                const spanText = document.createTextNode('There are no commit messages for that day.')
+                span.appendChild(spanText)
+                commits.appendChild(span)
+            }
+        }
+    </script>`
 
     //
     fs.writeFile(
         data.outputPath,
         `<!doctype html>
         <html>
-            <head>${css}</head>
+            <head>
+                ${js}
+                ${css}
+            </head>
             <body>
                 ${sqHtml}
-                ${projectsHtml}
+                ${infoHtml}
             </body>
         </html>`,
         err => {})

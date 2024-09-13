@@ -56,9 +56,11 @@ exports.getData = async (configData) => {
                 if(!commitCounts[iy]) {
                     commitCounts[iy] = {}
                     commitCounts[iy]['total'] = 1
+                    commitCounts[iy]['messages'] = [e.message]
                 }
                 else {
                     ++commitCounts[iy]['total']
+                    commitCounts[iy]['messages'].push(e.message)
                 }
 
                 if(!commitCounts[iy][colorIndexStr]) {
