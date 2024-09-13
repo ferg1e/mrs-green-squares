@@ -101,7 +101,7 @@ exports.renderData = (data) => {
         const arrayAsString = data.commitCounts[iy]
             ? "['" +
                 data.commitCounts[iy].messages
-                    .map(e => e.replaceAll("'", "\\'"))
+                    .map(e => e.replaceAll("'", "\\'").replaceAll('"', '&quot;'))
                     .join("','") +
                 "']"
 
