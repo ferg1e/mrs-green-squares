@@ -43,41 +43,48 @@ exports.renderData = (data) => {
         weeksDays.push(currentDayToDraw.getDate())
 
         const iy = getYyyyMmDd(currentDayToDraw)
-        const numCommits = data.commitCounts[iy]
-            ? data.commitCounts[iy]['total']
-            : 0
 
-        const percent = numCommits/data.max
-        let colorMax = 0
-        let colorI = 0
+        let numCommits = 0
 
         if(data.commitCounts[iy]) {
-
-            //get the biggest color count
             for(const i in data.commitCounts[iy]) {
-                if(i != 'total') {
-                    if(data.commitCounts[iy][i] > colorMax) {
-                        colorMax = data.commitCounts[iy][i]
-                    }
+                numCommits += data.commitCounts[iy][i].length
+            }
+        }
+
+        const percent = numCommits/data.max
+
+        let colorI = 0
+        let commitsI = ''
+        let commitsMax = 0
+
+        if(data.commitCounts[iy]) {
+            //get key with most commits
+            for(const i in data.commitCounts[iy]) {
+                if(data.commitCounts[iy][i].length > commitsMax) {
+                    commitsMax = data.commitCounts[iy][i].length
+                    commitsI = i
                 }
             }
 
-            //select the color with the max count
-            //that has the lowest id
-            colorI = 999999
+            //get the project index out of the key
+            const projectI = parseInt(commitsI.substring(1))
+            //get the group index using the project group id
+            const p = data.projects[projectI]
+            const groupId = typeof p.groupId === 'undefined'
+                ? 'default'
+                : p.groupId
 
-            for(const i in data.commitCounts[iy]) {
-                if(i != 'total') {
-                    const intI = parseInt(i)
+            for(let i = 0; i < data.groups.length; ++i) {
+                const g = data.groups[i]
 
-                    if(data.commitCounts[iy][i] == colorMax && intI < colorI) {
-                        colorI = intI
-                    }
+                if(groupId === g.id) {
+                    colorI = i
+                    break
                 }
             }
         }
 
-        //
         let cssClass = 'c' + colorI.toString()
 
         //
@@ -98,19 +105,32 @@ exports.renderData = (data) => {
         }
 
         //
-        const arrayAsString = data.commitCounts[iy]
-            ? "['" +
-                data.commitCounts[iy].messages
-                    .map(e => e.replaceAll("'", "\\'").replaceAll('"', '&quot;'))
-                    .join("','") +
-                "']"
+        let arrayAsString = '[]'
 
-            : '[]'
+        if(data.commitCounts[iy]) {
+            arrayAsString = '['
+            const objStrings = []
 
-        const totalCommits = data.commitCounts[iy] ? data.commitCounts[iy].total : 0
-        const commitPhrase = totalCommits === 1
+            for(const i in data.commitCounts[iy]) {
+                const projectI = parseInt(i.substring(1))
+                const projectTitle = data.projects[projectI].title
+
+                objStrings.push("{title: '" +
+                    projectTitle.replaceAll("'", "\\'").replaceAll('"', '&quot;') +
+                    "', messages: ['" +
+                    data.commitCounts[iy][i]
+                        .map(e => e.replaceAll("'", "\\'").replaceAll('"', '&quot;'))
+                        .join("','") +
+                    "']}")
+            }
+
+            arrayAsString += objStrings.join()
+            arrayAsString += ']'
+        }
+
+        const commitPhrase = numCommits === 1
             ? '1 commit'
-            : `${totalCommits} commits`
+            : `${numCommits} commits`
 
         const titleAttrValue = `${commitPhrase} on ${iy}`
 
@@ -237,22 +257,22 @@ exports.renderData = (data) => {
             margin-top: 1em;
         }
 
-        #commits > div {
+        #commits .simple-message {
             color: #999999;
             padding: 2em;
         }
 
-        #commits > ul {
+        #commits ul {
             margin: 0;
             padding: .5em;
             list-style-type: none;
         }
 
-        #commits > ul > li {
+        #commits ul > li {
             margin-bottom: .75em;
         }
 
-        #commits > ul > li:last-child {
+        #commits ul > li:last-child {
             margin-bottom: 0;
         }
 
@@ -269,9 +289,8 @@ exports.renderData = (data) => {
         } `
 
     //
-    for(const i in data.allColors) {
-        const jColors = data.allColors[i]
-        const sColors = jColors.split(',')
+    for(const i in data.groups) {
+        const sColors = data.groups[i].colors
 
         if(sColors.length == 5) {
             for(const j in sColors) {
@@ -306,33 +325,33 @@ exports.renderData = (data) => {
     //
     let infoHtml = '<div id="info">'
 
-    if(data.projects.length > 0) {
+    if(data.groups.length > 1) {
         infoHtml += '<div id="projects">'
 
-        for(let i = 0; i < data.projects.length; ++i) {
-            const p = data.projects[i]
+        for(let i = 0; i < data.groups.length; ++i) {
+            const g = data.groups[i]
             let colorsHtml = ''
 
-            if(p.colors.length === 5) {
+            if(g.colors.length === 5) {
                 for(let j = 4; j >= 1; --j) {
-                    colorsHtml += `<span class="pday" style="background:#${p.colors[j]}"></span>`
+                    colorsHtml += `<span class="pday" style="background:#${g.colors[j]}"></span>`
                 }
             }
             else {
                 for(let j = 4; j >= 1; --j) {
-                    const attrs = 'background: #' + p.colors[0] + '; opacity: ' + (.12 + .22*j) + ';'
+                    const attrs = 'background: #' + g.colors[0] + '; opacity: ' + (.12 + .22*j) + ';'
 
                     colorsHtml += `<span class="pday" style="${attrs}"></span>`
                 }
             }
 
-            infoHtml += `<div>${colorsHtml}${p.title}</div>`
+            infoHtml += `<div>${colorsHtml}${g.title}</div>`
         }
 
         infoHtml += '</div>'
     }
 
-    infoHtml += '<div id="commits"><div>Click a square to show commit messages.</div></div>'
+    infoHtml += '<div id="commits"><div class="simple-message">Click a square to show commit messages.</div></div>'
 
     infoHtml += '</div>'
 
@@ -346,20 +365,35 @@ exports.renderData = (data) => {
             }
 
             if(messages.length > 0) {
-                const ul = document.createElement('ul')
+                const rootDiv = document.createElement('div')
 
                 for(let i = 0; i < messages.length; ++i) {
-                    const li = document.createElement('li')
-                    const liText = document.createTextNode(messages[i])
-                    li.appendChild(liText)
-                    ul.appendChild(li)
+                    const m = messages[i]
+                    const h2 = document.createElement('h2')
+                    const h2Text = document.createTextNode(m.title)
+
+                    h2.appendChild(h2Text)
+                    rootDiv.appendChild(h2)
+
+                    const ul = document.createElement('ul')
+
+                    for(let j = 0; j < m.messages.length; ++j) {
+                        const li = document.createElement('li')
+                        const liText = document.createTextNode(m.messages[j])
+                        li.appendChild(liText)
+                        ul.appendChild(li)
+                    }
+
+                    rootDiv.appendChild(ul)
                 }
 
-                commits.appendChild(ul)
+                commits.appendChild(rootDiv)
             }
             else {
                 const div = document.createElement('div')
                 const divText = document.createTextNode('No commits on ' + dayDate + '.')
+
+                div.className = 'simple-message'
                 div.appendChild(divText)
                 commits.appendChild(div)
             }
