@@ -5,10 +5,10 @@ exports.getData = async (configData) => {
 
     //
     const commitCounts = {}
-    const allColors = []
     const projects = []
     let max = 0
     let firstDay, lastDay
+    const dailyTotals = {}
 
     //
     for(let i = 0; i < configData.repos.length; ++i) {
@@ -19,21 +19,6 @@ exports.getData = async (configData) => {
         const repoPath = r.dir
             ? r.dir
             : r
-
-        const colors = r.colors
-            ? r.colors
-            : ['eeeeee', 'D6E685', '8CC665', '44A340', '1E6823']
-
-        const jColors = colors.join()
-
-        let colorI = allColors.indexOf(jColors)
-
-        if(colorI == -1) {
-            allColors.push(jColors)
-            colorI = allColors.indexOf(jColors)
-        }
-
-        const colorIndexStr = colorI.toString()
 
         //
         const repo = simpleGit({
@@ -55,24 +40,25 @@ exports.getData = async (configData) => {
 
                 if(!commitCounts[iy]) {
                     commitCounts[iy] = {}
-                    commitCounts[iy]['total'] = 1
-                    commitCounts[iy]['messages'] = [e.message]
-                }
-                else {
-                    ++commitCounts[iy]['total']
-                    commitCounts[iy]['messages'].push(e.message)
                 }
 
-                if(!commitCounts[iy][colorIndexStr]) {
-                    commitCounts[iy][colorIndexStr] = 1
+                if(!commitCounts[iy][`p${i}`]) {
+                    commitCounts[iy][`p${i}`] = [e.message]
                 }
                 else {
-                    ++commitCounts[iy][colorIndexStr]
+                    commitCounts[iy][`p${i}`].push(e.message)
                 }
 
                 //
-                if(commitCounts[iy]['total'] > max) {
-                    max = commitCounts[iy]['total']
+                if(!dailyTotals[iy]) {
+                    dailyTotals[iy] = 1
+                }
+                else {
+                    ++dailyTotals[iy]
+                }
+
+                if(dailyTotals[iy] > max) {
+                    max = dailyTotals[iy]
                 }
 
                 //
@@ -87,12 +73,10 @@ exports.getData = async (configData) => {
         })
 
         //
-        if(r.title) {
-            projects.push({
-                title: r.title,
-                colors,
-            })
-        }
+        projects.push({
+            title: r.title,
+            groupId: r.group ? r.group : 'default',
+        })
     }
 
     //
@@ -103,11 +87,17 @@ exports.getData = async (configData) => {
     //
     return {
         commitCounts,
-        allColors,
         max,
         firstDay,
         lastDay,
         outputPath,
         projects,
+        groups: typeof configData.groups !== 'undefined'
+            ? configData.groups
+            : [{
+                title: "Default",
+                id: "default",
+                colors: ['00aa00']
+            }]
     }
 }
