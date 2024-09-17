@@ -9,7 +9,8 @@ returned by getData()
 const data = {
     commitCounts: {
         '2014-04-20': {
-            'p0': ['test commit message']
+            'p0': ['test commit message'],
+            'p1': ['test1', 'test2']
         },
         '2014-04-21': {
             'p1': ['test1', 'test2']
