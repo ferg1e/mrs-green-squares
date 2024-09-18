@@ -29,13 +29,42 @@ exports.getData = async (configData) => {
         const commits = await repo.log()
 
         commits.all.forEach(e => {
+
+            //
+            const gitCommitDate = e.date.substr(0, 10)
+            const d = new Date(gitCommitDate)
+            let isValidDate = false
+
+            if(typeof r.date_ranges === 'undefined') {
+                isValidDate = true
+            }
+            else {
+                for(let j = 0; j < r.date_ranges.length; ++j) {
+                    const dr = r.date_ranges[j]
+                    const minDate = typeof dr.min === 'undefined'
+                        ? undefined
+                        : new Date(dr.min)
+
+                    const maxDate = typeof dr.max === 'undefined'
+                        ? undefined
+                        : new Date(dr.max)
+
+                    const isInRange = (typeof minDate === 'undefined' || d >= minDate) &&
+                        (typeof maxDate === 'undefined' || d <= maxDate)
+
+                    if(isInRange) {
+                        isValidDate = true
+                        break
+                    }
+                }
+            }
+
+            //
             const authorEmail = e.author_email
-            const isCountCommit = !configData.authors ||
-                configData.authors.indexOf(authorEmail) != -1
+            const isCountCommit = isValidDate && (!configData.authors ||
+                configData.authors.indexOf(authorEmail) != -1)
 
             if(isCountCommit) {
-                const gitCommitDate = e.date.substr(0, 10)
-                const d = new Date(gitCommitDate)
                 const iy = getYyyyMmDd(d)
 
                 if(!commitCounts[iy]) {
