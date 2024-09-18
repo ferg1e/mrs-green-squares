@@ -26,6 +26,12 @@ exports.getData = async (configData) => {
             binary: 'git',
         })
 
+        //
+        if(r.branch) {
+            await repo.checkout(r.branch)
+        }
+
+        //
         const commits = await repo.log()
 
         commits.all.forEach(e => {
