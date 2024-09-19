@@ -1,12 +1,12 @@
 {
-    "repos": [
+    "projects": [
         {
-            "title": "My Repo",
-            "dir": "C:/path/to/my/repo"
+            "title": "My Project",
+            "repos": "C:/path/to/my/repo"
         },
         {
-            "title": "My Other Repo",
-            "dir": "C:/path/to/other/repo"
+            "title": "My Other Project",
+            "repos": "C:/path/to/other/repo"
         }
     ],
 

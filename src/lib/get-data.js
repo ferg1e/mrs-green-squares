@@ -11,106 +11,116 @@ exports.getData = async (configData) => {
     const dailyTotals = {}
 
     //
-    for(let i = 0; i < configData.repos.length; ++i) {
+    for(let i = 0; i < configData.projects.length; ++i) {
 
         //
-        const r = configData.repos[i]
-
-        const repoPath = r.dir
-            ? r.dir
-            : r
-
-        //
-        const repo = simpleGit({
-            baseDir: repoPath,
-            binary: 'git',
-        })
+        const project = configData.projects[i]
+        const repos = Array.isArray(project.repos)
+            ? project.repos
+            : [project.repos]
 
         //
-        if(r.branch) {
-            await repo.checkout(r.branch)
+        for(let j = 0; j < repos.length; ++j) {
+
+            //
+            const r = repos[j]
+
+            const repoPath = r.dir
+                ? r.dir
+                : r
+
+            //
+            const repo = simpleGit({
+                baseDir: repoPath,
+                binary: 'git',
+            })
+
+            //
+            if(r.branch) {
+                await repo.checkout(r.branch)
+            }
+
+            //
+            const commits = await repo.log()
+
+            commits.all.forEach(e => {
+
+                //
+                const gitCommitDate = e.date.substr(0, 10)
+                const d = new Date(gitCommitDate)
+                let isValidDate = false
+
+                if(typeof r.date_ranges === 'undefined') {
+                    isValidDate = true
+                }
+                else {
+                    for(let k = 0; k < r.date_ranges.length; ++k) {
+                        const dr = r.date_ranges[k]
+                        const minDate = typeof dr.min === 'undefined'
+                            ? undefined
+                            : new Date(dr.min)
+
+                        const maxDate = typeof dr.max === 'undefined'
+                            ? undefined
+                            : new Date(dr.max)
+
+                        const isInRange = (typeof minDate === 'undefined' || d >= minDate) &&
+                            (typeof maxDate === 'undefined' || d <= maxDate)
+
+                        if(isInRange) {
+                            isValidDate = true
+                            break
+                        }
+                    }
+                }
+
+                //
+                const authorEmail = e.author_email
+                const isCountCommit = isValidDate && (!configData.authors ||
+                    configData.authors.indexOf(authorEmail) != -1)
+
+                if(isCountCommit) {
+                    const iy = getYyyyMmDd(d)
+
+                    if(!commitCounts[iy]) {
+                        commitCounts[iy] = {}
+                    }
+
+                    if(!commitCounts[iy][`p${i}`]) {
+                        commitCounts[iy][`p${i}`] = [e.message]
+                    }
+                    else {
+                        commitCounts[iy][`p${i}`].push(e.message)
+                    }
+
+                    //
+                    if(!dailyTotals[iy]) {
+                        dailyTotals[iy] = 1
+                    }
+                    else {
+                        ++dailyTotals[iy]
+                    }
+
+                    if(dailyTotals[iy] > max) {
+                        max = dailyTotals[iy]
+                    }
+
+                    //
+                    if(!firstDay || (d < firstDay)) {
+                        firstDay = d
+                    }
+
+                    if(!lastDay || (d > lastDay)) {
+                        lastDay = d
+                    }
+                }
+            })
         }
 
         //
-        const commits = await repo.log()
-
-        commits.all.forEach(e => {
-
-            //
-            const gitCommitDate = e.date.substr(0, 10)
-            const d = new Date(gitCommitDate)
-            let isValidDate = false
-
-            if(typeof r.date_ranges === 'undefined') {
-                isValidDate = true
-            }
-            else {
-                for(let j = 0; j < r.date_ranges.length; ++j) {
-                    const dr = r.date_ranges[j]
-                    const minDate = typeof dr.min === 'undefined'
-                        ? undefined
-                        : new Date(dr.min)
-
-                    const maxDate = typeof dr.max === 'undefined'
-                        ? undefined
-                        : new Date(dr.max)
-
-                    const isInRange = (typeof minDate === 'undefined' || d >= minDate) &&
-                        (typeof maxDate === 'undefined' || d <= maxDate)
-
-                    if(isInRange) {
-                        isValidDate = true
-                        break
-                    }
-                }
-            }
-
-            //
-            const authorEmail = e.author_email
-            const isCountCommit = isValidDate && (!configData.authors ||
-                configData.authors.indexOf(authorEmail) != -1)
-
-            if(isCountCommit) {
-                const iy = getYyyyMmDd(d)
-
-                if(!commitCounts[iy]) {
-                    commitCounts[iy] = {}
-                }
-
-                if(!commitCounts[iy][`p${i}`]) {
-                    commitCounts[iy][`p${i}`] = [e.message]
-                }
-                else {
-                    commitCounts[iy][`p${i}`].push(e.message)
-                }
-
-                //
-                if(!dailyTotals[iy]) {
-                    dailyTotals[iy] = 1
-                }
-                else {
-                    ++dailyTotals[iy]
-                }
-
-                if(dailyTotals[iy] > max) {
-                    max = dailyTotals[iy]
-                }
-
-                //
-                if(!firstDay || (d < firstDay)) {
-                    firstDay = d
-                }
-
-                if(!lastDay || (d > lastDay)) {
-                    lastDay = d
-                }
-            }
-        })
-
-        //
         projects.push({
-            title: r.title,
-            groupId: r.group ? r.group : 'default',
+            title: project.title,
+            groupId: project.group ? project.group : 'default',
         })
     }
 
