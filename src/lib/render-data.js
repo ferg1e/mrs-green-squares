@@ -266,13 +266,21 @@ exports.renderData = (data) => {
             padding: .5em;
         }
 
+        #commits h1 {
+            padding: 0;
+            margin: 0 0 .5em 0;
+            font-size: 1.125em;
+            font-weight: normal;
+            color: #555555;
+        }
+
         #commits h2 {
             padding: 0;
             margin: .75em 0 .5em 0;
             font-size: 1.25em;
         }
 
-        #commits h2:first-child {
+        #commits h2:first-of-type {
             margin-top: 0;
         }
 
@@ -381,6 +389,12 @@ exports.renderData = (data) => {
             if(messages.length > 0) {
                 const rootDiv = document.createElement('div')
                 rootDiv.className = 'commits-message'
+
+                const h1 = document.createElement('h1')
+                const h1Text = document.createTextNode(dayDate)
+
+                h1.appendChild(h1Text)
+                rootDiv.appendChild(h1)
 
                 for(let i = 0; i < messages.length; ++i) {
                     const m = messages[i]
