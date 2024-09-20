@@ -255,6 +255,8 @@ exports.renderData = (data) => {
             border-radius: 4px;
             padding: 5px;
             margin-top: 1em;
+            max-height: 400px;
+            overflow: auto;
         }
 
         #commits .simple-message {
