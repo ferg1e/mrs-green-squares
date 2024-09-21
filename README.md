@@ -1,14 +1,18 @@
 # Mrs. Green Squares
 
 Mrs. Green Squares visualizes the commits in local Git repositories.
-It's similar to the GitHub commit visualization.
+The layout is almost identical to the GitHub commits visualization, but this tool also shows commit messages and you can group repos into different colors.
 The output format is an HTML file.
 
-## How To Run The Script
+## Install & Run
 
-Follow these steps to generate a commit visualization:
+- `git clone https://github.com/ferg1e/mrs-green-squares.git git-vis`
+- `cd git-vis`
+- `npm install`
+- edit the `repos` value in `src/config.json` to point to a directory that has a Git repo
+- `node src/index.js`
+- your commits visualization will now be in `git-vis/index.html`
 
-- Git clone this repo.
-- Run `npm install`.
-- Edit `src/config.json` and point to the directories that contain your Git repos. Fill in your email address for `authors` in the same config file.
-- Run `node src/index.js`.
+## Config
+
+Config section coming soon.
