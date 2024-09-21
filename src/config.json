@@ -3,16 +3,6 @@
         {
             "title": "My Project",
             "repos": "C:/path/to/my/repo"
-        },
-        {
-            "title": "My Other Project",
-            "repos": "C:/path/to/other/repo"
         }
-    ],
-
-    "authors": [
-        "mycommitemail@alice.net"
-    ],
-
-    "output_path": "index.html"
+    ]
 }
