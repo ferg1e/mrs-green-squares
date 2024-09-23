@@ -306,7 +306,7 @@ exports.renderData = (data) => {
             margin-bottom: 0;
         }
 
-        #projects {
+        #groups {
             border: 2px solid gray;
             border-radius: 4px;
             padding: 5px;
@@ -360,7 +360,7 @@ exports.renderData = (data) => {
     }
 
     if(data.groups.length > 1) {
-        infoHtml += '<div id="projects">'
+        infoHtml += '<div id="groups">'
 
         for(let i = 0; i < data.groups.length; ++i) {
             const g = data.groups[i]
