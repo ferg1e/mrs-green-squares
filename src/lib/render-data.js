@@ -184,7 +184,6 @@ exports.renderData = (data) => {
         sqHtml += '</div>'
     }
 
-    //sqHtml += '<span id="bookend"></span>'
     sqHtml += '</div>'
 
     //
