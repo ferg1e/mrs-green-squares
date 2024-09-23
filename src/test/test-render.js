@@ -19,6 +19,7 @@ const data = {
     max: 2,
     firstDay: new Date('2014-04-20'),
     lastDay: new Date('2014-04-21'),
+    pageTitle: 'Test Render',
     outputPath: 'test-render.html',
     projects: [
         {

@@ -129,12 +129,17 @@ exports.getData = async (configData) => {
         ? 'index.html'
         : configData.output_path
 
+    const pageTitle = configData.page_title
+        ? configData.page_title
+        : undefined
+
     //
     return {
         commitCounts,
         max,
         firstDay,
         lastDay,
+        pageTitle,
         outputPath,
         projects,
         groups: typeof configData.groups !== 'undefined'

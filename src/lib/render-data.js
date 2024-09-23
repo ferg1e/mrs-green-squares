@@ -250,6 +250,13 @@ exports.renderData = (data) => {
             width: 300px;
         }
 
+        #info > h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 1.5em;
+            font-weight: normal;
+        }
+
         #commits {
             border: 2px solid gray;
             border-radius: 4px;
@@ -348,6 +355,10 @@ exports.renderData = (data) => {
 
     //
     let infoHtml = '<div id="info">'
+
+    if(data.pageTitle) {
+        infoHtml += `<h1>${data.pageTitle}</h1>`
+    }
 
     if(data.groups.length > 1) {
         infoHtml += '<div id="projects">'
