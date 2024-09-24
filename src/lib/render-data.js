@@ -250,7 +250,7 @@ exports.renderData = (data) => {
         }
 
         #info > h1 {
-            margin: 0;
+            margin: 0 0 1rem 0;
             padding: 0;
             font-size: 1.5em;
             font-weight: normal;
@@ -260,7 +260,6 @@ exports.renderData = (data) => {
             border: 2px solid gray;
             border-radius: 4px;
             padding: 5px;
-            margin-top: 1em;
             max-height: 400px;
             overflow: auto;
         }
@@ -310,6 +309,7 @@ exports.renderData = (data) => {
             border: 2px solid gray;
             border-radius: 4px;
             padding: 5px;
+            margin-bottom: 1rem;
         }
 
         #bookend {
