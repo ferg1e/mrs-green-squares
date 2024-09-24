@@ -237,7 +237,7 @@ exports.renderData = (data) => {
         }
 
         .year {
-            margin-bottom: 1em;
+            margin-bottom: 1rem;
             position: relative;
             width: 689px;
         }
@@ -252,7 +252,7 @@ exports.renderData = (data) => {
         #info > h1 {
             margin: 0 0 1rem 0;
             padding: 0;
-            font-size: 1.5em;
+            font-size: 1.5rem;
             font-weight: normal;
         }
 
@@ -266,25 +266,25 @@ exports.renderData = (data) => {
 
         #commits .simple-message {
             color: #999999;
-            padding: 2em;
+            padding: 2rem;
         }
 
         #commits .commits-message {
-            padding: .5em;
+            padding: .5rem;
         }
 
         #commits h1 {
             padding: 0;
-            margin: 0 0 .5em 0;
-            font-size: 1.125em;
+            margin: 0 0 .5rem 0;
+            font-size: 1.125rem;
             font-weight: normal;
             color: #555555;
         }
 
         #commits h2 {
             padding: 0;
-            margin: .75em 0 .5em 0;
-            font-size: 1.25em;
+            margin: .75rem 0 .5rem 0;
+            font-size: 1.25rem;
         }
 
         #commits h2:first-of-type {
@@ -298,7 +298,7 @@ exports.renderData = (data) => {
         }
 
         #commits ul > li {
-            margin-bottom: .75em;
+            margin-bottom: .75rem;
         }
 
         #commits ul > li:last-child {
