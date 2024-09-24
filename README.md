@@ -17,7 +17,7 @@ The output format is an HTML file.
 
 For visualization, there are projects and groups.
 
-Projects contain one or more Git repositories. Commit messages show in the sidebar under their project title heading. For example, if you have a front-end repo and a separate back-end repo and you want commit messages from both to appear under the same project title heading, they you would put these two repos into the same project.
+Projects contain one or more Git repositories. Commit messages show in the sidebar under their project title. For example, if you have a front-end repo and a separate back-end repo and you want commit messages from both to appear under the same project title, then you would put these two repos into the same project.
 
 Groups contain one or more projects. You can set a different commit visualization square color for each group. For example, you can group Python projects into blue squares and C++ projects into red squares.
 
