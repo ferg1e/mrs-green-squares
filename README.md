@@ -33,3 +33,81 @@ Projects and groups are configured in `src/config.json`. The config file is init
     ]
 }
 ```
+
+If you don't supply a `group` value for a project then the project will automatically be assigned a `group` value of `default`. If you don't use any groups then a default group is created. The above config is the same as:
+
+```json
+{
+    "projects": [
+        {
+            "title": "My Project",
+            "repos": "C:/path/to/my/repo",
+            "group": "default"
+        }
+    ],
+
+    "groups": [
+        {
+            "title": "Default",
+            "id": "default",
+            "colors": ["00aa00"]
+        }
+    ]
+}
+```
+
+If you want to use multiple repos in a project put them in an array:
+
+```json
+{
+    "projects": [
+        {
+            "title": "My Project",
+            "repos": [
+                "C:/path/to/my/repo1",
+                "C:/path/to/my/repo2"
+            ]
+        }
+    ]
+}
+```
+
+Repos can also use `branch` and `date_ranges`:
+
+```json
+{
+    "projects": [
+        {
+            "title": "My Project",
+            "repos": [
+                "C:/path/to/my/repo1",
+                {
+                    "dir": "C:/path/to/my/repo2",
+                    "branch": "dev",
+                    "date_ranges": [
+                        {
+                            "min": "2020-01-01",
+                            "max": "2020-12-31"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
+You can filter commits by author by using a root `authors` array:
+
+```json
+{
+    "projects": [
+        {
+            "title": "My Project",
+            "repos": "C:/path/to/my/repo"
+        }
+    ],
+
+    "authors": ["alice@foo.net", "bob@foo.net"]
+}
+```
