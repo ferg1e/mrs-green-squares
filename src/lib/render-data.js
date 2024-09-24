@@ -273,7 +273,7 @@ exports.renderData = (data) => {
             padding: .5rem;
         }
 
-        #commits h1 {
+        #commits h2 {
             padding: 0;
             margin: 0 0 .5rem 0;
             font-size: 1.125rem;
@@ -281,13 +281,13 @@ exports.renderData = (data) => {
             color: #555555;
         }
 
-        #commits h2 {
+        #commits h3 {
             padding: 0;
             margin: .75rem 0 .5rem 0;
             font-size: 1.25rem;
         }
 
-        #commits h2:first-of-type {
+        #commits h3:first-of-type {
             margin-top: 0;
         }
 
@@ -402,19 +402,19 @@ exports.renderData = (data) => {
                 const rootDiv = document.createElement('div')
                 rootDiv.className = 'commits-message'
 
-                const h1 = document.createElement('h1')
-                const h1Text = document.createTextNode(dayDate)
+                const h2 = document.createElement('h2')
+                const h2Text = document.createTextNode(dayDate)
 
-                h1.appendChild(h1Text)
-                rootDiv.appendChild(h1)
+                h2.appendChild(h2Text)
+                rootDiv.appendChild(h2)
 
                 for(let i = 0; i < messages.length; ++i) {
                     const m = messages[i]
-                    const h2 = document.createElement('h2')
-                    const h2Text = document.createTextNode(m.title)
+                    const h3 = document.createElement('h3')
+                    const h3Text = document.createTextNode(m.title)
 
-                    h2.appendChild(h2Text)
-                    rootDiv.appendChild(h2)
+                    h3.appendChild(h3Text)
+                    rootDiv.appendChild(h3)
 
                     const ul = document.createElement('ul')
 
