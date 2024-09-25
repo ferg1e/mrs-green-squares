@@ -9,6 +9,14 @@ exports.getData = async (configData) => {
     let max = 0
     let firstDay, lastDay
     const dailyTotals = {}
+    const finalGroups = typeof configData.groups === 'undefined'
+        ? [{
+            title: "Default",
+            id: "default",
+            colors: ['00aa00']
+        }]
+
+        : configData.groups
 
     //
     for(let i = 0; i < configData.projects.length; ++i) {
@@ -76,8 +84,27 @@ exports.getData = async (configData) => {
 
                 //
                 const authorEmail = e.author_email
-                const isCountCommit = isValidDate && (!configData.authors ||
-                    configData.authors.indexOf(authorEmail) != -1)
+
+                //
+                let configAuthors = configData.authors
+                const groupAuthors = getGroupAuthors(project.group, finalGroups)
+
+                if(typeof r.authors !== 'undefined') {
+                    configAuthors = r.authors
+                }
+                else if(typeof project.authors !== 'undefined') {
+                    configAuthors = project.authors
+                }
+                else if(typeof groupAuthors !== 'undefined') {
+                    configAuthors = groupAuthors
+                }
+
+                const isValidAuthor = typeof configAuthors === 'undefined' ||
+                    configAuthors.length === 0 ||
+                    configAuthors.indexOf(authorEmail) !== -1
+
+                //
+                const isCountCommit = isValidDate && isValidAuthor
 
                 if(isCountCommit) {
                     const iy = getYyyyMmDd(d)
@@ -142,12 +169,22 @@ exports.getData = async (configData) => {
         pageTitle,
         outputPath,
         projects,
-        groups: typeof configData.groups !== 'undefined'
-            ? configData.groups
-            : [{
-                title: "Default",
-                id: "default",
-                colors: ['00aa00']
-            }]
+        groups: finalGroups
+    }
+}
+
+//
+function getGroupAuthors(groupId, groups) {
+
+    //
+    const finalGroupId = typeof groupId === 'undefined'
+        ? 'default'
+        : groupId
+
+    //
+    for(let i = 0; i < groups.length; ++i) {
+        if(groups[i].id === finalGroupId) {
+            return groups[i].authors
+        }
     }
 }
