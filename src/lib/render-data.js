@@ -316,7 +316,21 @@ exports.renderData = (data) => {
             display: inline-block;
             width: 120px;
             height: 10px;
-        } `
+        }
+
+        #width-err {
+            display: none;
+        }
+        
+        @media screen and (max-width: 1200px) {
+            .sqs, #info {
+                display: none;
+            }
+
+            #width-err {
+                display: block;
+            }
+        }`
 
     //
     for(const i in data.groups) {
@@ -442,6 +456,9 @@ exports.renderData = (data) => {
     </script>`
 
     //
+    const mobileBlurb = `<div id="width-err">Browser needs to be at least 1,200 pixels wide in order to view this app.</div>`
+
+    //
     fs.writeFile(
         data.outputPath,
         `<!doctype html>
@@ -453,6 +470,7 @@ exports.renderData = (data) => {
             <body>
                 ${sqHtml}
                 ${infoHtml}
+                ${mobileBlurb}
             </body>
         </html>`,
         err => {})
