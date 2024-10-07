@@ -49,7 +49,7 @@ exports.getData = async (configData) => {
             }
 
             //
-            const commits = await repo.log()
+            const commits = await repo.log({ '--reverse':null })
 
             commits.all.forEach(e => {
 
