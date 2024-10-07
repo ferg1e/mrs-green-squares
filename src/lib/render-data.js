@@ -136,7 +136,8 @@ exports.renderData = (data) => {
 
         weeksHtml += '<div onmouseup="mouseUp(' +
             arrayAsString + ', \'' + iy +
-            '\')" title="' + titleAttrValue + '" class="day ' +
+            '\', ' + data.isProjectTitles + ')" title="' +
+            titleAttrValue + '" class="day ' +
             cssClass + '"></div>'
 
         if(currentDayToDraw.getDay() == 6) {
@@ -291,12 +292,6 @@ exports.renderData = (data) => {
             margin-top: 0;
         }
 
-        #commits ul {
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-        }
-
         #commits ul > li {
             margin-bottom: .75rem;
         }
@@ -331,6 +326,28 @@ exports.renderData = (data) => {
                 display: block;
             }
         }`
+
+    if(data.isProjectTitles) {
+        css += `
+            #commits ul {
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+            }`
+    }
+    else {
+        css += `
+            #commits ul {
+                margin: 0 0 .75rem 0;
+                padding: 0;
+                list-style-type: none;
+            }
+                
+            #commits ul:last-of-type {
+                margin: 0 0 0 0;
+            }`
+    }
+
 
     //
     for(const i in data.groups) {
@@ -405,7 +422,7 @@ exports.renderData = (data) => {
 
     //
     const js = `<script>
-        function mouseUp(messages, dayDate) {
+        function mouseUp(messages, dayDate, isProjectTitles) {
             const commits = document.getElementById('commits')
 
             if(commits.children.length > 0) {
@@ -424,11 +441,14 @@ exports.renderData = (data) => {
 
                 for(let i = 0; i < messages.length; ++i) {
                     const m = messages[i]
-                    const h3 = document.createElement('h3')
-                    const h3Text = document.createTextNode(m.title)
 
-                    h3.appendChild(h3Text)
-                    rootDiv.appendChild(h3)
+                    if(isProjectTitles) {
+                        const h3 = document.createElement('h3')
+                        const h3Text = document.createTextNode(m.title)
+
+                        h3.appendChild(h3Text)
+                        rootDiv.appendChild(h3)
+                    }
 
                     const ul = document.createElement('ul')
 

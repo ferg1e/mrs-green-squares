@@ -160,6 +160,10 @@ exports.getData = async (configData) => {
         ? configData.page_title
         : undefined
 
+    const isProjectTitles = typeof configData.is_project_titles === 'undefined'
+        ? true
+        : configData.is_project_titles
+
     //
     return {
         commitCounts,
@@ -168,6 +172,7 @@ exports.getData = async (configData) => {
         lastDay,
         pageTitle,
         outputPath,
+        isProjectTitles,
         projects,
         groups: finalGroups
     }

@@ -21,6 +21,7 @@ const data = {
     lastDay: new Date('2014-04-21'),
     pageTitle: 'Test Render',
     outputPath: 'test-render.html',
+    isProjectTitles: true,
     projects: [
         {
             title: "Repo 1"
