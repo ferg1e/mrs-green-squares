@@ -113,7 +113,9 @@ exports.renderData = (data) => {
 
             for(const i in data.commitCounts[iy]) {
                 const projectI = parseInt(i.substring(1))
-                const projectTitle = data.projects[projectI].title
+                const projectTitle = typeof data.projects[projectI].title === 'undefined'
+                    ? ''
+                    : data.projects[projectI].title
 
                 objStrings.push("{title: '" +
                     projectTitle.replaceAll("'", "\\'").replaceAll('"', '&quot;') +
