@@ -44,104 +44,140 @@ exports.getData = async (configData) => {
             })
 
             //
-            if(r.branch) {
-                await repo.checkout(r.branch)
+            const branches = []
+
+            //only current branch
+            if(typeof r.branch === 'undefined') {
+                branches.push(false)
+            }
+
+            //all branches
+            else if(r.branch === '*') {
+                await repo.branchLocal().then(data => {
+                    branches.push(...data.all)
+                })
+            }
+
+            //array of branches
+            else if(Array.isArray(r.branch)) {
+                branches.push(...r.branch)
+            }
+
+            //one branch
+            else {
+                branches.push(r.branch)
             }
 
             //
-            const commits = await repo.log({ '--reverse':null })
+            const commitHashes = []
 
-            commits.all.forEach(e => {
+            for(let k = 0; k < branches.length; ++k) {
 
                 //
-                const gitCommitDate = e.date.substr(0, 10)
-                const d = new Date(gitCommitDate)
-                let isValidDate = false
+                const branch = branches[k]
+                const commits = branch !== false
+                    ? await repo.log({ [branch]:null, '--reverse':null })
+                    : await repo.log({ '--reverse':null })
 
-                if(typeof r.date_ranges === 'undefined') {
-                    isValidDate = true
-                }
-                else {
-                    for(let k = 0; k < r.date_ranges.length; ++k) {
-                        const dr = r.date_ranges[k]
-                        const minDate = typeof dr.min === 'undefined'
-                            ? undefined
-                            : new Date(dr.min)
+                commits.all.forEach(e => {
 
-                        const maxDate = typeof dr.max === 'undefined'
-                            ? undefined
-                            : new Date(dr.max)
+                    //
+                    if(commitHashes.indexOf(e.hash) !== -1) {
+                        return
+                    }
 
-                        const isInRange = (typeof minDate === 'undefined' || d >= minDate) &&
-                            (typeof maxDate === 'undefined' || d <= maxDate)
+                    commitHashes.push(e.hash)
 
-                        if(isInRange) {
-                            isValidDate = true
-                            break
+                    //
+                    const gitCommitDate = e.date.substr(0, 10)
+                    const d = new Date(gitCommitDate)
+                    let isValidDate = false
+
+                    if(typeof r.date_ranges === 'undefined') {
+                        isValidDate = true
+                    }
+                    else {
+                        for(let m = 0; m < r.date_ranges.length; ++m) {
+                            const dr = r.date_ranges[m]
+                            const minDate = typeof dr.min === 'undefined'
+                                ? undefined
+                                : new Date(dr.min)
+
+                            const maxDate = typeof dr.max === 'undefined'
+                                ? undefined
+                                : new Date(dr.max)
+
+                            const isInRange = (typeof minDate === 'undefined' || d >= minDate) &&
+                                (typeof maxDate === 'undefined' || d <= maxDate)
+
+                            if(isInRange) {
+                                isValidDate = true
+                                break
+                            }
                         }
                     }
-                }
-
-                //
-                const authorEmail = e.author_email
-
-                //
-                let configAuthors = configData.authors
-                const groupAuthors = getGroupAuthors(project.group, finalGroups)
-
-                if(typeof r.authors !== 'undefined') {
-                    configAuthors = r.authors
-                }
-                else if(typeof project.authors !== 'undefined') {
-                    configAuthors = project.authors
-                }
-                else if(typeof groupAuthors !== 'undefined') {
-                    configAuthors = groupAuthors
-                }
-
-                const isValidAuthor = typeof configAuthors === 'undefined' ||
-                    configAuthors.length === 0 ||
-                    configAuthors.indexOf(authorEmail) !== -1
-
-                //
-                const isCountCommit = isValidDate && isValidAuthor
-
-                if(isCountCommit) {
-                    const iy = getYyyyMmDd(d)
-
-                    if(!commitCounts[iy]) {
-                        commitCounts[iy] = {}
-                    }
-
-                    if(!commitCounts[iy][`p${i}`]) {
-                        commitCounts[iy][`p${i}`] = [e.message]
-                    }
-                    else {
-                        commitCounts[iy][`p${i}`].push(e.message)
-                    }
 
                     //
-                    if(!dailyTotals[iy]) {
-                        dailyTotals[iy] = 1
-                    }
-                    else {
-                        ++dailyTotals[iy]
-                    }
-
-                    if(dailyTotals[iy] > max) {
-                        max = dailyTotals[iy]
-                    }
+                    const authorEmail = e.author_email
 
                     //
-                    if(!firstDay || (d < firstDay)) {
-                        firstDay = d
+                    let configAuthors = configData.authors
+                    const groupAuthors = getGroupAuthors(project.group, finalGroups)
+
+                    if(typeof r.authors !== 'undefined') {
+                        configAuthors = r.authors
+                    }
+                    else if(typeof project.authors !== 'undefined') {
+                        configAuthors = project.authors
+                    }
+                    else if(typeof groupAuthors !== 'undefined') {
+                        configAuthors = groupAuthors
                     }
 
-                    if(!lastDay || (d > lastDay)) {
-                        lastDay = d
+                    const isValidAuthor = typeof configAuthors === 'undefined' ||
+                        configAuthors.length === 0 ||
+                        configAuthors.indexOf(authorEmail) !== -1
+
+                    //
+                    const isCountCommit = isValidDate && isValidAuthor
+
+                    if(isCountCommit) {
+                        const iy = getYyyyMmDd(d)
+
+                        if(!commitCounts[iy]) {
+                            commitCounts[iy] = {}
+                        }
+
+                        if(!commitCounts[iy][`p${i}`]) {
+                            commitCounts[iy][`p${i}`] = [e.message]
+                        }
+                        else {
+                            commitCounts[iy][`p${i}`].push(e.message)
+                        }
+
+                        //
+                        if(!dailyTotals[iy]) {
+                            dailyTotals[iy] = 1
+                        }
+                        else {
+                            ++dailyTotals[iy]
+                        }
+
+                        if(dailyTotals[iy] > max) {
+                            max = dailyTotals[iy]
+                        }
+
+                        //
+                        if(!firstDay || (d < firstDay)) {
+                            firstDay = d
+                        }
+
+                        if(!lastDay || (d > lastDay)) {
+                            lastDay = d
+                        }
                     }
-                }
-            })
+                })
+            }
         }
 
         //
