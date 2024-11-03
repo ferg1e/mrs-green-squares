@@ -69,6 +69,20 @@ exports.getData = async (configData) => {
             }
 
             //
+            let configAuthors = configData.authors
+            const groupAuthors = getGroupAuthors(project.group, finalGroups)
+
+            if(typeof r.authors !== 'undefined') {
+                configAuthors = r.authors
+            }
+            else if(typeof project.authors !== 'undefined') {
+                configAuthors = project.authors
+            }
+            else if(typeof groupAuthors !== 'undefined') {
+                configAuthors = groupAuthors
+            }
+
+            //
             const commitHashes = []
 
             for(let k = 0; k < branches.length; ++k) {
@@ -119,21 +133,6 @@ exports.getData = async (configData) => {
 
                     //
                     const authorEmail = e.author_email
-
-                    //
-                    let configAuthors = configData.authors
-                    const groupAuthors = getGroupAuthors(project.group, finalGroups)
-
-                    if(typeof r.authors !== 'undefined') {
-                        configAuthors = r.authors
-                    }
-                    else if(typeof project.authors !== 'undefined') {
-                        configAuthors = project.authors
-                    }
-                    else if(typeof groupAuthors !== 'undefined') {
-                        configAuthors = groupAuthors
-                    }
-
                     const isValidAuthor = typeof configAuthors === 'undefined' ||
                         configAuthors.length === 0 ||
                         configAuthors.indexOf(authorEmail) !== -1
