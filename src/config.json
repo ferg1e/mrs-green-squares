@@ -1,8 +1,9 @@
 {
     "projects": [
         {
-            "title": "My Project",
             "repos": "C:/path/to/my/repo"
         }
-    ]
+    ],
+    "page_title": "Project Title",
+    "is_project_titles": false
 }
