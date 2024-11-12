@@ -17,7 +17,7 @@ The output format is an HTML file.
 
 Configure the Git repositories you want to visualize using `src/config.json`. And then generate the visualization by running `node src/index.js`. The generated visualization will output to `index.html` unless you specify a different `output_path`.
 
-### Config / Single Repository
+### Single Repository
 
 For visualizing a single Git repository, you will probably want to use this for your `src/config.json`:
 
@@ -35,7 +35,7 @@ For visualizing a single Git repository, you will probably want to use this for 
 
 We used the `page_title` for a project title and we turned off project titles by setting `is_project_titles` to `false`.
 
-### Config / Change Square Color
+### Change Square Color
 
 You can change the square colors by using a group with an `id` equal to `default`:
 
@@ -60,7 +60,7 @@ You can change the square colors by using a group with an `id` equal to `default
 
 The default square color is `00aa00` and here we changed it to a reddish `aa0000`.
 
-### Config / Multiple Repositories
+### Multiple Repositories
 
 If you want to visualize multiple projects at once, then you should use `title`s for projects, remove `is_project_titles` (the default is `true`) and use a more general `page_title`:
 
@@ -80,7 +80,7 @@ If you want to visualize multiple projects at once, then you should use `title`s
 }
 ```
 
-### Config / Multiple Square Colors
+### Multiple Square Colors
 
 You can use different square colors for different projects by using multiple groups:
 
@@ -116,7 +116,7 @@ You can use different square colors for different projects by using multiple gro
 
 If there is more than one group then a group key will show on the visualization. In this example there is only one project per group but you can assign multiple projects to a group.
 
-### Config / Branches
+### Branches
 
 By default, only commits from the currently checked out branch will be visualized. But you can select one or more branches to include in the visualization by using `branch` for repos:
 
@@ -137,7 +137,7 @@ By default, only commits from the currently checked out branch will be visualize
 
 `branch` can be a single branch as a string, an array of strings for one or more branches, or you can use `"*"` to indicate all branches.
 
-### Config / Date Ranges
+### Date Ranges
 
 You can filter commits by date ranges for repos:
 
@@ -163,7 +163,7 @@ You can filter commits by date ranges for repos:
 
 You can use one or more date ranges (notice how they are in an array), and each date range can use only the `min` or only the `max` (ie. you don't have to use both).
 
-### Config / Filter by Authors
+### Filter by Authors
 
 You can filter commits by author email addresses. This is available on repos, projects, groups and at the root level:
 
@@ -194,7 +194,7 @@ You can filter commits by author email addresses. This is available on repos, pr
 
 The precedence is repo, project, group, root level. For example, if you have an `authors` array on both a repo and the group that repo uses then only the `authors` on the repo will be used.
 
-### Config / Multiple Repos Per Project
+### Multiple Repos Per Project
 
 A project's `repos` can be an array of repositories. For example, if you have a separate front-end repo and a separate back-end repo for an app, then you would probably want to put both of these repos under the same project like this:
 
@@ -215,7 +215,7 @@ A project's `repos` can be an array of repositories. For example, if you have a 
 
 Each repo element can be a directory string (like above) or an object with `dir`, `branch`, `date_ranges` and/or `authors` as demonstrated in previous examples.
 
-### Config / Output Path
+### Output Path
 
 By default your visualization will output to `index.html` but you can change that via `output_path`:
 
@@ -232,7 +232,7 @@ By default your visualization will output to `index.html` but you can change tha
 }
 ```
 
-### Config / Multiple Visualizations
+### Multiple Visualizations
 
 You can output multiple visualization files with one run of the tool by using a top level array:
 
@@ -263,7 +263,7 @@ You can output multiple visualization files with one run of the tool by using a 
 
 Be sure to use a different `output_path` for each.
 
-### Config / Different Colors for Different Authors
+### Different Colors for Different Authors
 
 You can use different square colors for different authors by rendering the same repo more than once:
 
@@ -299,7 +299,7 @@ You can use different square colors for different authors by rendering the same 
 }
 ```
 
-### Config / Five-Color Combinations
+### Five-Color Combinations
 
 A group's `colors` array can be one color (all previous examples) or five colors. Here is a five-color example that is GitHub's colors:
 
