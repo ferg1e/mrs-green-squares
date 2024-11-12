@@ -4,6 +4,8 @@ Mrs. Green Squares visualizes the commits in local Git repositories.
 The layout is almost identical to the GitHub commits visualization, but this tool also shows commit messages and you can group repos into different colors.
 The output format is an HTML file.
 
+![Sample Visualization](/img/ss001.png?raw=true)
+
 ## Install & Run
 
 - `git clone https://github.com/ferg1e/mrs-green-squares.git git-vis`
